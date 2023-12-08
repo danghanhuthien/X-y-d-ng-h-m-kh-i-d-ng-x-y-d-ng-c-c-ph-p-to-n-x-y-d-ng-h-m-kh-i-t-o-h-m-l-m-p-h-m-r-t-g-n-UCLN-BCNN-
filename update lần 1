@@ -1,0 +1,192 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Security.Authentication.ExtendedProtection;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Xây_dựng_hàm_khởi_dựng
+{
+    internal class Program
+    {
+        public class Phanso
+        {
+            public int Tuso;
+            public int Mauso;
+            public int UCLN()
+            {
+                int a = Math.Abs(Tuso);
+                int b = Math.Abs(Mauso);
+                while (b != 0)
+                {
+                    int temp = b;
+                    b = a % b;
+                    a = temp;
+                }
+                return a;
+            }
+
+            public int BCNN()
+            {
+                int a = Math.Abs(Tuso);
+                int b = Math.Abs(Mauso);
+                return a * b / UCLN();
+            }
+
+            public void InUCLN_BCNN()
+            {
+                Console.WriteLine($"Ước chung lớn nhất là: {UCLN()}");
+                Console.WriteLine($"Bội chung nhỏ nhất là: {BCNN()}");
+            }
+            // khai báo tử số bằng 0, mẫu số bằng 1
+            public Phanso()
+            {
+                Tuso = 0;
+                Mauso = 1;
+            }
+            // có tham số
+            public Phanso(int tuso, int mauso)
+            {
+                Tuso = tuso;
+                Mauso = mauso;
+            }
+
+
+            public int UCLN(int a, int b)
+            {
+                if (b == 0)
+                    return a;
+                return UCLN(b, a % b);
+            }
+            // hàm public int UCLN(int a, int b) và public void RutGon() liên kết với nhau
+            // để có thể ruts gọn kết quả khi in ra.
+            public void RutGon()
+            {
+                int ucln = UCLN(Tuso, Mauso);
+                Tuso /= ucln;
+                Mauso /= ucln;
+            }
+            public override string ToString()
+            {
+                if (Mauso < 0)
+                {
+                    return $"{-Tuso}/{-Mauso}";
+                }
+                else
+                {
+                    return $"{Tuso}/{Mauso}";
+                }
+            }
+            //phép cộng
+            public Phanso Cong(Phanso ps2)
+            {
+                int mausoChung = Mauso * ps2.Mauso;
+                int tuso1 = Tuso * ps2.Mauso;
+                int tuso2 = ps2.Tuso * Mauso;
+                return new Phanso(tuso1 + tuso2, mausoChung);
+            }
+            //phép trừ
+            public Phanso Tru(Phanso ps2)
+            {
+                int mausoChung = Mauso * ps2.Mauso;
+                int tuso1 = Tuso * ps2.Mauso;
+                int tuso2 = ps2.Tuso * Mauso;
+                return new Phanso(tuso1 - tuso2, mausoChung);
+            }
+            //phép nhân
+            public Phanso Nhan(Phanso ps2)
+            {
+                return new Phanso(Tuso * ps2.Tuso, Mauso * ps2.Mauso);
+            }
+            //phép chia
+            public Phanso Chia(Phanso ps2)
+            {
+                return new Phanso(Tuso * ps2.Mauso, Mauso * ps2.Tuso);
+            }
+            public static void Main(string[] args)
+            {
+                Console.OutputEncoding = Encoding.UTF8;
+                // Tạo một đối tượng phân số
+                Phanso ps = new Phanso(0, 1);
+                Console.WriteLine("Câu 1 xây dựng hàm khởi dựng gán tử số bằng 0, mẫu số bằng 1 là:"+ps);
+
+                Console.WriteLine("Câu 2 xây dựng các phép toán.");
+
+                // Nhập giá trị của tử số và mẫu số từ bàn phím
+                Console.Write("Nhập tử số của phân số thứ 1: ");
+                int tuso1 = int.Parse(Console.ReadLine());
+                int mauso1, mauso2;
+                bool lyLuan = false;
+                do
+                {
+                    Console.Write("Nhập mẫu số của phân số thứ 1: ");
+                    if (int.TryParse(Console.ReadLine(), out mauso1) && mauso1 > 0)
+                    {
+                        lyLuan = true;
+                    }
+                    else
+                    {
+                        Console.ForegroundColor = ConsoleColor.Red;
+
+                        Console.WriteLine("Giá trị m không hợp lệ. Vui lòng nhập lại.");
+
+                        Console.ResetColor();
+                    }
+                } while (!lyLuan);
+                lyLuan = false;
+                Console.Write("Nhập tử số của phân số thứ 2: ");
+                int tuso2 = int.Parse(Console.ReadLine());
+                do
+                {
+                    Console.Write("Nhập mẫu số của phân số thứ 2: ");
+                    if (int.TryParse(Console.ReadLine(), out mauso2) && mauso2 > 0)
+                    {
+                        lyLuan = true;
+                    }
+                    else
+                    {
+                        Console.ForegroundColor = ConsoleColor.Red;
+
+                        Console.WriteLine("Giá trị m không hợp lệ. Vui lòng nhập lại.");
+
+                        Console.ResetColor();
+                    }
+                } while (!lyLuan);
+
+                // Tạo đối tượng phân số từ giá trị đã nhập
+                Phanso ps1 = new Phanso(tuso1, mauso1);
+                Phanso ps2 = new Phanso(tuso2, mauso2);
+                Console.WriteLine();
+
+                // In ra giá trị của phân số cộng
+                Phanso psc = ps1.Cong(ps2);
+                psc.RutGon();
+                psc.InUCLN_BCNN();
+                Console.WriteLine("Tổng của 2 phân số là:" + psc);
+                Console.WriteLine();
+
+                // In ra giá trị của phân số trừ
+                Phanso pst = ps1.Tru(ps2);
+                pst.RutGon();
+                pst.InUCLN_BCNN();
+                Console.WriteLine("Hiệu của 2 phân số là:" + pst);
+                Console.WriteLine();
+
+                // In ra giá trị của phân số nhân
+                Phanso psn = ps1.Nhan(ps2);
+                psn.RutGon();
+                psn.InUCLN_BCNN();
+                Console.WriteLine("Tích của 2 phân số là:" + psn);
+                Console.WriteLine();
+
+                // In ra giá trị của phân số chia
+                Phanso pschia = ps1.Chia(ps2);
+                pschia.RutGon();
+                pschia.InUCLN_BCNN();
+                Console.WriteLine("Thương của 2 phân số là:" + pschia);
+                Console.WriteLine();
+
+            }
+        }
+    }
+}
